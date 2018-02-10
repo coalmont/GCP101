@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta charset='utf-8'/>
+<script type='text/javascript'>
+
+const selfSuffix = '18A1';
+const selfTitle = 'Gcp101C25Demo'+selfSuffix;
+const cellInitialKey = 'myrow'+selfSuffix;
+const cellInitialData = 'mydata'+selfSuffix;
+
+var iframe25Loaded = false;
+var goodCloudResponse = false;
+var cloudResponseProcessed = false;
+
+const expectedCloudServiceDelaySeconds = 1;
+
+const googleCloudProjectId = 'tb4gcp18a';
+const cloudServiceUrl = 'https://us-central1-'+googleCloudProjectId+'.cloudfunctions.net/datastore2'+'3setvalue';
+const codingLessonUrl = 'https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/';
+const HR = '\n----------\n';
+
+function logWrite(message) { // No tracing a low-level utility
+	try {
+		var stack = new Error().stack;
+		var caller = stack.split('\n')[1].trim();
+		caller = caller.split('@')[0].trim();
+		console.log(simpleTimestamp()+' '+caller+': ' + message);
+	}
+	catch(err) {console.log(err.message)}
+}
+
+function simpleTimestamp() { // No tracing a low-level utility
+	var xNow = new Date();
+	var xHours = xNow.getHours(); if (xHours<10) {xHours = '0' + xHours;}
+	var xMinutes = xNow.getMinutes(); if (xMinutes<10) {xMinutes = '0' + xMinutes;}
+	var xSeconds = xNow.getSeconds(); if (xSeconds<10) {xSeconds = '0' + xSeconds;}
+	var xTimestamp = xHours + ':' + xMinutes + ':' + xSeconds
+	return xTimestamp;
+}
+
+function bodyOnloadEventHandler(event) { // F1: Aim form action at the cloud service 
+	logWrite('L101 Start');
+	
+	document.getElementById('h3topic25id').innerHTML = selfTitle;	
+	document.getElementById('key25id').value = cellInitialKey;	
+	document.getElementById('column25id').value = cellInitialData;	
+	
+	document.getElementById('form25id').action = cloudServiceUrl;	
+	
+	document.getElementById('lessonUrl25id').value = codingLessonUrl;
+	document.getElementById('lessonUrl25id').style.width = 0.4*screen.width;
+	
+	document.getElementById('iframe25id').style.width = 0.4*screen.width;
+	
+	document.getElementById('prompt25id').style.height = 100;
+	document.getElementById('prompt25id').style.width = 0.4*screen.width;
+	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
+	
+	logWrite('L199 Finish'+HR);
+}
+
+function iframe25OnloadEventHandler(event) { // F2: Flag up iframe25Loaded
+	logWrite(HR+'L201 Start');
+	iframe25Loaded = true;
+	logWrite('L299 Finish; iframe25Loaded: ' + iframe25Loaded + HR);
+}
+
+function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
+	logWrite('L301 Start; iframe25Loaded: ' + iframe25Loaded);
+	
+	var form = document.getElementById('form25id');
+	var iFrame = document.getElementById('iframe25id');
+	
+	iframe25Loaded = false;
+	
+	iFrame.onload = iframe25OnloadEventHandler(event);
+	
+	logWrite('L312 Submit form25id');
+	form.submit();
+	
+	logWrite('L325 Watch for cloud response');
+	setTimeout(form25ResponseDelayHandler, 1000*expectedCloudServiceDelaySeconds);
+	
+	logWrite('L399 Finish; iframe25Loaded: ' + iframe25Loaded + HR);
+	return false;
+}
+
+function form25ResponseDelayHandler() { // Watch for and process cloud response
+    setTimeout(function () {
+		if (!form25responseProcessed())
+		{
+			form25ResponseDelayHandler();
+		}
+    }, 1000*expectedCloudServiceDelaySeconds);
+}
+
+function form25responseProcessed() { // F4: Confirm input values
+
+	if (!iframe25Loaded) {
+		logWrite('L405 Still waiting for the cloud');	
+		return false; 
+	}
+	
+	logWrite('L410 Start; iframe25Loaded: ' + iframe25Loaded);
+
+	var cellKind = document.getElementById('kind25id').value;
+	var cellKey = document.getElementById('key25id').value;
+	var cellProperty = document.getElementById('column25id').value;
+	var cellValue = document.getElementById('lessonUrl25id').value;
+
+	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + '\nurlOfLesson: '+cellValue;
+	document.getElementById('prompt25id').innerHTML = msg;
+	
+	logWrite('L499 Finish'+HR+'ALL DONE'+HR);
+	
+	return true;
+}
+
+function form25ClearEventHandler() {
+	logWrite('L510 Start');
+	
+	iframe25Loaded = false;
+	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
+	
+	var iFrame = document.getElementById('iframe25id');
+	try {
+		iFrame.src = 'about:blank';
+	} catch (e) {
+		logWrite(e.message);
+	}
+	
+	logWrite('L599 Finish'+HR+'ALL DONE'+HR);
+}
+
+</script>
+</head>
+<body onload='bodyOnloadEventHandler()'>
+<h3 id='h3topic25id'>(undeclared title)</h3>
+	<form id='form25id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
+		Kind: <input id='kind25id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
+		Key: <input id='key25id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
+		Mycolumn3: <input id='column25id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
+		urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
+	</form>
+		<button form='form25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
+		<button name='btnclear' onclick='form25ClearEventHandler()'>Clear</button><br>
+		<textarea id='prompt25id' height=100>Loading...</textarea><br>
+		
+		<iframe id='iframe25id' name='iframe25name' height=100>
+		</iframe><br>
+		<p>Press the Submit button and try again, if you see any of the following messages:
+		<ul>
+		<li>Endpoint read failed
+		<li>Error: could not handle the request
+		<li>Error: Server Error
+		</ul>
+
+</body>
+</html>
