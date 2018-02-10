@@ -1,5 +1,5 @@
 # GCP 101 by Ri4C
-The Beginner’s Guide to Computer Programming Using Google Cloud Platform
+The Beginner’s Guide to Computer Programming Using Google Cloud Platform | Cloud Computing for Beginners
 
 [Table of Contents](https://ri4c.com/gcp101/toc/) | [Read the first chapter](https://ri4c.com/gcp101-chapter-11-using-google-cloud-code-editor/)
 
