@@ -11,4 +11,7 @@ The online book, [GCP 101 by Ri4C](https://ri4c.com/gcp101/), is divided into se
 ## About the source code
 | Source code  | Chapter  |  
 |---|---|
-| [gcp101c25demo18A1.htm](https://github.com/ri4c/GCP101/blob/master/gcp101c25demo18A1.htm)  | [Chapter 25 HTML App on Local Machine](https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/)  |
+| [gcp101c25demo18A1.htm](https://github.com/ri4c/GCP101/blob/master/gcp101c25demo18A1.htm)  |
+- [Chapter 25 HTML App on Local Machine](https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/)  
+- [Chapter 26 JavaScript calling Google Cloud Functions](https://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/)
+|
