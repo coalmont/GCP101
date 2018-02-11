@@ -1,7 +1,6 @@
 <html>
-
 <!--
-	This source code is created for Chapter 25 in the online book "GCP 101 by Ri4C".
+	This source code is for use in Chapter 25 of the online book "GCP 101 by Ri4C".
 	The logic of this source code is explained in Chapter 26.
 	Chapter 25 URL: https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/
 	Chapter 26 URL: http://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/
@@ -14,6 +13,10 @@
 
 <script type='text/javascript'>
 
+'use strict';
+
+const googleCloudProjectId = 'xtb4gcp18ax';
+
 const selfSuffix = '18A1';
 const selfTitle = 'Gcp101C25Demo'+selfSuffix;
 const cellInitialKey = 'myrow'+selfSuffix;
@@ -22,16 +25,27 @@ const cellInitialData = 'mydata'+selfSuffix;
 var iframe25Loaded = false;
 const expectedCloudServiceDelaySeconds = 1;
 
-const googleCloudProjectId = 'xtb4gcp18a';
 const cloudServiceUrl = 'https://us-central1-'+googleCloudProjectId+'.cloudfunctions.net/datastore2'+'3setvalue';
 const codingLessonUrl = 'https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/';
-const HR = '\n----------\n';
+const HR = '\n--------------------\n';
+
+function padLeadZeros(number, zeroCount) {
+  var x = number;
+  switch (zeroCount) {
+    case 2: x = number <= 99 ? ("00"+number).slice(-2) : number; break;
+    case 3: x = number <= 999 ? ("000"+number).slice(-3) : number; break;
+    case 4: x = number <= 9999 ? ("0000"+number).slice(-4) : number; break;
+    default: x = number;
+  }
+  return x;
+}
 
 function logWrite(message) { // No tracing a low-level utility
 	try {
 		var stack = new Error().stack;
 		var caller = stack.split('\n')[1].trim();
 		caller = caller.split('@')[0].trim();
+		caller = caller.split('/')[0].trim();
 		console.log(simpleTimestamp()+' '+caller+': ' + message);
 	}
 	catch(err) {console.log(err.message)}
@@ -39,20 +53,21 @@ function logWrite(message) { // No tracing a low-level utility
 
 function simpleTimestamp() { // No tracing a low-level utility
 	var xNow = new Date();
-	var xHours = xNow.getHours(); if (xHours<10) {xHours = '0' + xHours;}
-	var xMinutes = xNow.getMinutes(); if (xMinutes<10) {xMinutes = '0' + xMinutes;}
-	var xSeconds = xNow.getSeconds(); if (xSeconds<10) {xSeconds = '0' + xSeconds;}
-	var xTimestamp = xHours + ':' + xMinutes + ':' + xSeconds
-	return xTimestamp;
+	var xHours = padLeadZeros(xNow.getHours(),2);
+	var xMinutes = padLeadZeros(xNow.getMinutes(),2);
+	var xSeconds = padLeadZeros(xNow.getSeconds(),2);
+	var xMilliseconds = padLeadZeros(xNow.getMilliseconds(),3);
+	return xHours + ':' + xMinutes + ':' + xSeconds + '.' + xMilliseconds;
 }
 
 function bodyOnloadEventHandler(event) { // F1: Aim form action at the cloud service 
-	logWrite('L101 Start');
+	logWrite('L1064 Start');
 	
 	document.getElementById('h3topic25id').innerHTML = selfTitle;	
 	document.getElementById('key25id').value = cellInitialKey;	
 	document.getElementById('column25id').value = cellInitialData;	
 	
+	logWrite('L1070 Resets cloud service URL');
 	document.getElementById('form25id').action = cloudServiceUrl;	
 	
 	document.getElementById('lessonUrl25id').value = codingLessonUrl;
@@ -64,52 +79,62 @@ function bodyOnloadEventHandler(event) { // F1: Aim form action at the cloud ser
 	document.getElementById('prompt25id').style.width = 0.4*screen.width;
 	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
 	
-	logWrite('L199 Finish'+HR);
+	logWrite('L1082 Finish'+HR+'PAGE LOADED'+HR);
 }
 
 function iframe25OnloadEventHandler(event) { // F2: Flag up iframe25Loaded
-	logWrite(HR+'L201 Start');
+	logWrite(HR);
+	logWrite('L2087 Start');
 	iframe25Loaded = true;
-	logWrite('L299 Finish; iframe25Loaded: ' + iframe25Loaded + HR);
+	logWrite('L2089 Finish; Set iframe25Loaded=' + iframe25Loaded + HR);
 }
 
 function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
-	logWrite('L301 Start; iframe25Loaded: ' + iframe25Loaded);
+	logWrite('L3093 Start');
 	
-	var form = document.getElementById('form25id');
-	var iFrame = document.getElementById('iframe25id');
+	setTimeout(function (){
+		logWrite('L3096 Disable the Submit button');
+		document.getElementById("btnsubmit25id").disabled = true;
+		document.body.style.cursor = 'wait';
+		document.getElementById("btnclear25id").focus();
+	}, 22);
 	
-	iframe25Loaded = false;
+	setTimeout(function (){
 	
-	iFrame.onload = iframe25OnloadEventHandler(event);
+		logWrite('L3104 Start; iframe25Loaded: ' + iframe25Loaded);
+		
+		resetOutputFields('Submitting data');
+		
+		var form = document.getElementById('form25id');
+		var iFrame = document.getElementById('iframe25id');
+		
+		iframe25Loaded = false;
+		logWrite('L3112 Flag down, iframe25Loaded: ' + iframe25Loaded);
+		
+		logWrite('L3114 Set up to detect cloud response');
+		iFrame.onload = iframe25OnloadEventHandler(event);
+		
+		logWrite('L3117 Send data to cloud service');
+		form.submit();
+		
+		logWrite('L3120 Watch for cloud response');
+		setTimeout(form25ResponseDelayHandler, 1000*expectedCloudServiceDelaySeconds);
+		
+		logWrite('L3123 Finish; iframe25Loaded: ' + iframe25Loaded + HR);
 	
-	logWrite('L312 Submit form25id');
-	form.submit();
+	}, 222);
 	
-	logWrite('L325 Watch for cloud response');
-	setTimeout(form25ResponseDelayHandler, 1000*expectedCloudServiceDelaySeconds);
-	
-	logWrite('L399 Finish; iframe25Loaded: ' + iframe25Loaded + HR);
-	return false;
-}
-
-function form25ResponseDelayHandler() { // Watch for and process cloud response
-    setTimeout(function () {
-		if (!form25responseProcessed())
-		{
-			form25ResponseDelayHandler();
-		}
-    }, 1000*expectedCloudServiceDelaySeconds);
+	logWrite('L3127 Finish');
 }
 
 function form25responseProcessed() { // F4: Confirm input values
 
 	if (!iframe25Loaded) {
-		logWrite('L405 Still waiting for the cloud');	
+		logWrite('L4133 Still waiting for the cloud');	
 		return false; 
 	}
 	
-	logWrite('L410 Start; iframe25Loaded: ' + iframe25Loaded);
+	logWrite('L4137 Start; iframe25Loaded: ' + iframe25Loaded);
 
 	var cellKind = document.getElementById('kind25id').value;
 	var cellKey = document.getElementById('key25id').value;
@@ -117,18 +142,27 @@ function form25responseProcessed() { // F4: Confirm input values
 	var cellValue = document.getElementById('lessonUrl25id').value;
 
 	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + '\nurlOfLesson: '+cellValue;
+	
+	logWrite('L4146 Report input data');
 	document.getElementById('prompt25id').innerHTML = msg;
 	
-	logWrite('L499 Finish'+HR+'ALL DONE'+HR);
+	setTimeout(function (){
+		logWrite('L4150 Enable the Submit button');
+		document.getElementById("btnsubmit25id").disabled = false;
+		document.body.style.cursor = 'auto';
+	}, 111);
+	
+	logWrite('L4155 Finish'+HR+'ALL DONE'+HR);
 	
 	return true;
 }
 
-function form25ClearEventHandler() {
-	logWrite('L510 Start');
+function resetOutputFields(actionVerb) { // F5: Prompt the user of the current status
+	logWrite('L5161 Start; reset the user interface');
 	
 	iframe25Loaded = false;
-	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
+	
+	document.getElementById('prompt25id').innerHTML = actionVerb + ' at ' + simpleTimestamp(); 
 	
 	var iFrame = document.getElementById('iframe25id');
 	try {
@@ -137,7 +171,31 @@ function form25ClearEventHandler() {
 		logWrite(e.message);
 	}
 	
-	logWrite('L599 Finish'+HR+'ALL DONE'+HR);
+	logWrite('L5174 Finish');
+}
+
+function form25ClearEventHandler() { // F6 Reset the UI
+	logWrite('F6178 Start');
+	
+	resetOutputFields('Ready');
+	
+	logWrite('F6182 Enable the Submit button');
+	document.getElementById("btnsubmit25id").disabled = false;
+	
+	logWrite('L6185 Finish'+HR+'ALL CLEAR'+HR);
+}
+
+function form25ResponseDelayHandler() { // F7 Watch for and process cloud response
+	logWrite('L7189 Start');
+    setTimeout(function () {
+		logWrite('L7191 About to check response');
+		if (!form25responseProcessed())
+		{
+			logWrite('L7194 About to process response');
+			form25ResponseDelayHandler();
+		}
+    }, 1000*expectedCloudServiceDelaySeconds);
+	logWrite('L7198 Finish');
 }
 
 </script>
@@ -155,8 +213,8 @@ function form25ClearEventHandler() {
 	urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
 </form>
 
-<p><button form='form25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
-	<button name='btnclear' onclick='form25ClearEventHandler()'>Clear</button><br>
+<p><button form='form25id' id='btnsubmit25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
+	<button id='btnclear25id' name='btnclear' onclick='form25ClearEventHandler()'>Clear</button><br>
 
 	<textarea id='prompt25id' height=100>Loading...</textarea><br>
 
