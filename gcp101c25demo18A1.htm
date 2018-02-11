@@ -1,6 +1,17 @@
 <html>
+
+<!--
+	This source code is created for Chapter 25 in the online book "GCP 101 by Ri4C".
+	The logic of this source code is explained in Chapter 26.
+	Chapter 25 URL: https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/
+	Chapter 26 URL: http://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/
+	Book homepage: https://ri4c.com/gcp101/
+ -->
+
 <head>
+
 <meta charset='utf-8'/>
+
 <script type='text/javascript'>
 
 const selfSuffix = '18A1';
@@ -9,12 +20,9 @@ const cellInitialKey = 'myrow'+selfSuffix;
 const cellInitialData = 'mydata'+selfSuffix;
 
 var iframe25Loaded = false;
-var goodCloudResponse = false;
-var cloudResponseProcessed = false;
-
 const expectedCloudServiceDelaySeconds = 1;
 
-const googleCloudProjectId = 'tb4gcp18a';
+const googleCloudProjectId = 'xtb4gcp18a';
 const cloudServiceUrl = 'https://us-central1-'+googleCloudProjectId+'.cloudfunctions.net/datastore2'+'3setvalue';
 const codingLessonUrl = 'https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/';
 const HR = '\n----------\n';
@@ -133,27 +141,37 @@ function form25ClearEventHandler() {
 }
 
 </script>
+
 </head>
+
 <body onload='bodyOnloadEventHandler()'>
+
 <h3 id='h3topic25id'>(undeclared title)</h3>
-	<form id='form25id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
-		Kind: <input id='kind25id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
-		Key: <input id='key25id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
-		Mycolumn3: <input id='column25id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
-		urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
-	</form>
-		<button form='form25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
-		<button name='btnclear' onclick='form25ClearEventHandler()'>Clear</button><br>
-		<textarea id='prompt25id' height=100>Loading...</textarea><br>
-		
-		<iframe id='iframe25id' name='iframe25name' height=100>
-		</iframe><br>
-		<p>Press the Submit button and try again, if you see any of the following messages:
-		<ul>
-		<li>Endpoint read failed
-		<li>Error: could not handle the request
-		<li>Error: Server Error
-		</ul>
+
+<form id='form25id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
+	Kind: <input id='kind25id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
+	Key: <input id='key25id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
+	Mycolumn3: <input id='column25id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
+	urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
+</form>
+
+<p><button form='form25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
+	<button name='btnclear' onclick='form25ClearEventHandler()'>Clear</button><br>
+
+	<textarea id='prompt25id' height=100>Loading...</textarea><br>
+
+	<iframe id='iframe25id' name='iframe25name' height=200 >
+	</iframe>
+</p>
+
+<p>Press the Submit button and try again, if you see any of the following messages:
+	<ul>
+		<li>Endpoint read failed</li>
+		<li>Error: could not handle the request</li>
+		<li>Error: Server Error</li>
+	</ul>
+</p>
 
 </body>
+
 </html>
