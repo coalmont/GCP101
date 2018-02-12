@@ -41,18 +41,25 @@ function getKey (requestData) { // Start of getKey
 } // End of getKey
 
 exports.setValue = (req, res) => { // Start of setValue
+  
+  // Abort with an error if the parent JSON does not include valid name in the third field.
   if (!req.body.value) { throw new Error('L25 Data missing. Example:\n' + dataExample1); }
 
   //set JSON content type and CORS headers for the response
   res.header('Content-Type','application/json');
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   
+  // Determines where the target data is in Datastore.
   const key = getKey(req.body);
+  
+  // Prepare the input entity for the Datastore
   const entity = { key: key, data: req.body.value };
 
   var outMsg = `{"Cloud":"${simpleTimestamp()}", "Result":"Entity saved: ${key.path.join('/')}", "Lesson":"${lessonURL}"}`;
   
+  // Save the input as a new or the updated entity in the Datastore
+  // Also, notify the user of the result produced by the cloud service.
   var returnCode = dataStore.save(entity).then(() => res.status(200).send(outMsg)).catch((err) => {
       console.error(err);
       res.status(500).send(err.message);
