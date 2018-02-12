@@ -6,14 +6,33 @@ const dataStore = require('@google-cloud/datastore')();
 const lessonURL = 'https://seekonkjourney.wordpress.com/gcp101-chapter-23-datastore23setvalue-cloud-service/';
 var dataExample1 = `{ "kind":"mytable1", "key":"myrow204", "value":{"mycolumn3":"mydata205", "urlOfLesson": "${lessonURL}"}}`;
 
-function localTime() {
+function padLeadZeros(number, zeroCount) { // No tracing a low-level utility
+	// Unit Test: https://codepen.io/ri4c/pen/XZMPdK
+	
+	var x = number;
+	
+	switch (zeroCount) {
+		case 2: x = number <= 99 ? ("00"+number).slice(-2) : number; break;
+		case 3: x = number <= 999 ? ("000"+number).slice(-3) : number; break;
+		case 4: x = number <= 9999 ? ("0000"+number).slice(-4) : number; break;
+		default: x = number;
+	}
+	
+	return x;
+}
+
+function simpleTimestamp() { // No tracing a low-level utility
+	//
+	
 	var xNow = new Date();
-	var xHours = xNow.getHours(); if (xHours<10) {xHours = '0' + xHours;}
-	var xMinutes = xNow.getMinutes(); if (xMinutes<10) {xMinutes = '0' + xMinutes;}
-	var xSeconds = xNow.getSeconds(); if (xSeconds<10) {xSeconds = '0' + xSeconds;}
-	var xTime = xHours + ':' + xMinutes + ':' + xSeconds
-	return xTime;
-} // End of localTime
+	
+	var xHours = padLeadZeros(xNow.getHours(),2);
+	var xMinutes = padLeadZeros(xNow.getMinutes(),2);
+	var xSeconds = padLeadZeros(xNow.getSeconds(),2);
+	var xMilliseconds = padLeadZeros(xNow.getMilliseconds(),3);
+	
+	return xHours + ':' + xMinutes + ':' + xSeconds + '.' + xMilliseconds;
+}
 
 function getKey (requestData) { // Start of getKey
   if (!requestData.key) { throw new Error('L19 Key missing'); }
@@ -32,12 +51,14 @@ exports.setValue = (req, res) => { // Start of setValue
   const key = getKey(req.body);
   const entity = { key: key, data: req.body.value };
 
-  return dataStore.save(entity)
-    .then(() => res.status(200).send(`{"Result of Cloud Service":"Entity ${key.path.join('/')} saved.", "Time of Cloud Service":"${new Date()}", "Origin of Cloud Service":"${lessonURL}"}`))
-    .catch((err) => {
+  var outMsg = `{"Cloud":"${simpleTimestamp()}", "Result":"Entity saved: ${key.path.join('/')}", "Lesson":"${lessonURL}"}`;
+  
+  var returnCode = dataStore.save(entity).then(() => res.status(200).send(outMsg)).catch((err) => {
       console.error(err);
       res.status(500).send(err.message);
       return Promise.reject(err);
-    });
+  });
+  console.log(outMsg);
+  return returnCode;
   
 }; // End of setValue
