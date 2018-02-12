@@ -9,7 +9,7 @@ Written by [Nickantony Quach](https://ri4c.com/quach/) of Rhode Island, the onli
 The online book, [GCP 101 by Ri4C](https://ri4c.com/gcp101/), is divided into several chapter sequences. All chapters in the same sequence cover the same area of knowledge and stay at the same level of granularity. For example, the first sequence walks you across the Google Cloud Platform to show you two of its key modules, Datastore and Cloud Functions. Although source code is involved, you’re not expected to understand its logic at all. All the details in computer programming and the subtleties of cloud computing will be covered by later sequences.
 
 ## Quick Start Guide
-The fastest way for a beginner to experience cloud computing and understand how to create and use a cloud service is to first read the chapter, [Chapter 26 JavaScript calling Google Cloud Functions](https://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/), of the online book, [GCP 101 by Ri4C](https://ri4c.com/gcp101/).
+The fastest way for a beginner to experience cloud computing and understand how to create and use a cloud service is to first read the chapter, [Chapter 26 JavaScript calling Google Cloud Functions](https://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/), in the online book, [GCP 101 by Ri4C](https://ri4c.com/gcp101/).
 
 ## About the source code
 | Source code  | Chapter  |  
