@@ -143,10 +143,10 @@ function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
 		var iFrame = document.getElementById('iframe25id');
 		
 		global.iframe25Loaded = false;
-		logWrite('L3146 Flag down, iframe25Loaded: ' + global.iframe25Loaded);
-		
-		logWrite('L3148 Set up to detect cloud response');
 		iFrame.onload = iframe25OnloadEventHandler(event);
+	
+		logWrite('L1148 Resets cloud service URL');
+		document.getElementById('form25id').action = global.cloudServiceSetUrl;	
 		
 		logWrite('L3151 Send data to cloud service');
 		form.submit();
@@ -213,7 +213,6 @@ function resetOutputFields(actionVerb) { // F5: Prompt the user of the current s
 	logWrite('L5213 Finish');
 }
 
-
 function form25ClearEventHandler() { // F6 Reset the UI
 	//
 	
@@ -223,10 +222,11 @@ function form25ClearEventHandler() { // F6 Reset the UI
 	
 	logWrite('F6224 Enable the Submit button');
 	document.getElementById("btnsubmit25id").disabled = false;
+	document.getElementById("btnretrieve25id").disabled = false;
+	
 	
 	logWrite('L6227 Finish'+global.HR+'ALL CLEAR'+global.HR);
 }
-
 
 function form25SetResponseDelayHandler() { // F7 Watch for and process cloud response
 	//
@@ -277,7 +277,7 @@ function form25RetrieveEventHandler(event) { // F13 Process the request from the
 		form.submit();
 		
 		logWrite('L13279 Watch for cloud response');
-		setTimeout( form25SetResponseDelayHandler, 1000*global.expectedCloudServiceDelaySeconds );
+		setTimeout( form25GetResponseDelayHandler, 1000*global.expectedCloudServiceDelaySeconds );
 		
 		logWrite('L3156 Finish; iframe25Loaded: ' + global.iframe25Loaded + global.HR);
 	
@@ -309,10 +309,10 @@ function form25getResponseProcessed() { // F14: Confirm input values
 	document.getElementById('prompt25id').innerHTML = msg;
 	
 	setTimeout( function() {
-		logWrite('L14312 Enable the Submit button');
+		logWrite('L14312 Enable the Retrieve button');
 		document.getElementById("btnretrieve25id").disabled = false;
 		document.body.style.cursor = 'auto';
-	}, 111);
+	}, 333);
 	
 	logWrite('L14317 Finish'+global.HR+'ALL DONE'+global.HR);	
 	return true;
@@ -322,18 +322,18 @@ function form25getResponseProcessed() { // F14: Confirm input values
 function form25GetResponseDelayHandler() { // F17 Watch for and process GET response
 	//
 	
-	logWrite('L17293 Start');
+	logWrite('L17325 Start');
 	
     setTimeout( function() {
-		logWrite('L17296 About to check response');
+		logWrite('L17328 About to check response');
 		if (!form25getResponseProcessed())
 		{
-			logWrite('L7240 About to process response');
+			logWrite('L17331 About to process response');
 			form25GetResponseDelayHandler();
 		}
     }, 1000*global.expectedCloudServiceDelaySeconds);
 	
-	logWrite('L7245 Finish');
+	logWrite('L17336 Finish');
 }
 
 </script>
