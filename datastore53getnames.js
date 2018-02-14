@@ -55,11 +55,14 @@ exports.getNames = (req, res) => { // Start of getValue
   // Step B - Determine where the target data is in Datastore.
   //const key = getKey(req.body);
   
-  const query = dataStore.createQuery(requestData.kind).order('name', {descending: false} );
+  // const query = dataStore.createQuery(requestData.kind).select('id').order('id', {descending: false} );
+  console.log(`Kind:${requestData.kind}`);
+  const query = dataStore.createQuery(requestData.kind);
   
   return dataStore.runQuery(query)
-    .then( results => {
+    .then( (results) => {
       const names = results[0];
+	  console.log(`results:${results}`);
       if (!names) {
         throw new Error(`No ${requestData.kind} entities found.`);
       }
