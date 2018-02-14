@@ -14,4 +14,5 @@ The fastest way for a beginner to experience cloud computing and understand how 
 ## About the source code
 | Source code  | Chapter  |  
 |---|---|
+|[datastore23setvalue.js](https://github.com/ri4c/GCP101/blob/master/datastore23setvalue.js)|<ul><li>[Chapter 23 datastore23setvalue Cloud Service](https://seekonkjourney.wordpress.com/gcp101-chapter-23-datastore23setvalue-cloud-service/)</li></ul>|
 | [gcp101c25demo18A1.htm](https://github.com/ri4c/GCP101/blob/master/gcp101c25demo18A1.htm)  | <ul><li>[Chapter 25 HTML App on Local Machine](https://ri4c.com/gcp101-chapter-25-html-app-on-local-machine/)</li><li>[Chapter 26 JavaScript calling Google Cloud Functions](https://ri4c.com/gcp101-chapter-26-javascript-calling-google-cloud-functions/)</li></ul>|
