@@ -1,12 +1,23 @@
-'use strict'; // Code to be executed in strict mode.
+// File: index.js (where this source code should be placed)
+// Function: (as named by cloudService, below)
+// Lesson: (as declared by lessonURL, below)
+// Source: https://github.com/ri4c/GCP101/blob/master/datastore23setvalue.js
+
+'use strict'; // Code syntax is to be in strict mode
+
 const dataStore = require('@google-cloud/datastore')();
 // The above line requires the following in package.json:
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
+const cloudService = "datastore23setvalue"; // As found on console.cloud.google.com/functions/list
+const serviceVersion = "1.0";
+const versionDate = '2018-02-14 5:57 AM';
+const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
+
 const lessonURL = 'https://seekonkjourney.wordpress.com/gcp101-chapter-23-datastore23setvalue-cloud-service/';
 var dataExample1 = `{ "kind":"mytable1", "key":"myrow204", "value":{"mycolumn3":"mydata205", "urlOfLesson": "${lessonURL}"}}`;
 
-function padLeadZeros(number, zeroCount) { // No tracing a low-level utility
+function padLeadZeros(number, zeroCount) { // No tracing of a low-level utility
 	// Unit Test: https://codepen.io/ri4c/pen/XZMPdK
 	
 	var x = number;
@@ -21,7 +32,7 @@ function padLeadZeros(number, zeroCount) { // No tracing a low-level utility
 	return x;
 }
 
-function simpleTimestamp() { // No tracing a low-level utility
+function simpleTimestamp() { // No tracing of a low-level utility
 	//
 	
 	var xNow = new Date();
@@ -41,26 +52,21 @@ function getKey (requestData) { // Start of getKey
 } // End of getKey
 
 exports.setValue = (req, res) => { // Start of setValue
-  // Step C32A - Abort with an error if the parent JSON does not include valid name in the third field.
+  // Step A - Abort with an error if the parent JSON does not include valid name in the third field.
   
-  // Step C32B - Abort with an error if the parent JSON does not include valid name in the third field.
+  // Step B - Abort with an error if the parent JSON does not include valid name in the third field.
   if (!req.body.value) { throw new Error('L25 Data missing. Example:\n' + dataExample1); }
-
-  //set JSON content type and CORS headers for the response
-  res.header('Content-Type','application/json');
-  // res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
   
-  // Step C32C - Determines where the target data is in Datastore.
+  // Step C - Determines where the target data is in Datastore.
   const key = getKey(req.body);
   
-  // Step C32D - Prepare the input entity for the Datastore
+  // Step D - Prepare the input entity for the Datastore
   const entity = { key: key, data: req.body.value };
 
-  var outMsg = `{"Cloud":"${simpleTimestamp()}", "Result":"Entity saved: ${key.path.join('/')}", "Lesson":"${lessonURL}"}`;
+  var outMsg = `{"Cloud":"${simpleTimestamp()}", "Result":"Entity saved: ${key.path.join('/')}", "Version":"${versionInfo}"}, "Lesson":"${lessonURL}"}`;
   
-  // Step C32E - Save the input as a new or the updated entity in the Datastore
-  // Step C32F - Also, notify the user of the result produced by the cloud service.
+  // Step E - Save the input as a new or the updated entity in the Datastore
+  // Step F - Also, notify the user of the result produced by the cloud service.
   var returnCode = dataStore.save(entity).then(() => res.status(200).send(outMsg)).catch((err) => {
       console.error(err);
       res.status(500).send(err.message);
