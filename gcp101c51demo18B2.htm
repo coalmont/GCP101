@@ -1,0 +1,374 @@
+<html>
+
+<!--
+	This source code is for use in Chapter 51 of the online book "GCP 101 by Ri4C".
+	Chapter 51 URL: https://seekonkjourney.wordpress.com/gpg101-chapter-51-datastore51getvalue-cloud-service/
+	Book homepage: https://ri4c.com/gcp101/
+ -->
+ 
+ 
+<head>
+
+<meta charset='utf-8'/>
+
+
+<script type='text/javascript'>
+
+'use strict';
+
+const selfSuffix = '18B2';
+const chapterNumber = '51';
+
+var global = { // Global constants and variables
+
+	googleCloudProjectId : 'tb4gcp18a',
+	debug : true,
+	iframe25Loaded : false,
+	expectedCloudServiceDelaySeconds : 1,
+
+	selfTitle : 'Gcp101C'+chapterNumber+'Demo'+selfSuffix,
+	cellInitialKey : 'myrow'+chapterNumber,
+	cellInitialData : 'mydata'+selfSuffix,
+
+	cloudServiceSetUrl : 'TBD',
+	cloudServiceGetUrl : 'TBD',
+	codingLessonUrl : 'https://seekonkjourney.wordpress.com/gpg101-chapter-51-datastore51getvalue-cloud-service/',
+	HR : '\n--------------------\n'
+}
+
+global.cloudServiceSetUrl = 'https://us-central1-'+global.googleCloudProjectId+'.cloudfunctions.net/datastore2'+'3setvalue';
+global.cloudServiceGetUrl = 'https://us-central1-'+global.googleCloudProjectId+'.cloudfunctions.net/datastore5'+'1setvalue';
+
+	
+function padLeadZeros(number, zeroCount) { // No tracing a low-level utility
+	// Unit Test: https://codepen.io/ri4c/pen/XZMPdK
+	
+	var x = number;
+	
+	switch (zeroCount) {
+		case 2: x = number <= 99 ? ("00"+number).slice(-2) : number; break;
+		case 3: x = number <= 999 ? ("000"+number).slice(-3) : number; break;
+		case 4: x = number <= 9999 ? ("0000"+number).slice(-4) : number; break;
+		default: x = number;
+	}
+	
+	return x;
+}
+
+
+function logWrite(message) { // No tracing a low-level utility
+	//
+	
+	if (!global.debug) return;
+	
+	try {
+		var stack = new Error().stack;
+		var caller = stack.split('\n')[1].trim();
+		caller = caller.split('@')[0].trim();
+		caller = caller.split('/')[0].trim();
+		console.log(simpleTimestamp()+' '+caller+': ' + message);
+	}
+	catch(err) {console.log(err.message)}
+}
+
+
+function simpleTimestamp() { // No tracing a low-level utility
+	//
+	
+	var xNow = new Date();
+	
+	var xHours = padLeadZeros(xNow.getHours(),2);
+	var xMinutes = padLeadZeros(xNow.getMinutes(),2);
+	var xSeconds = padLeadZeros(xNow.getSeconds(),2);
+	var xMilliseconds = padLeadZeros(xNow.getMilliseconds(),3);
+	
+	return xHours + ':' + xMinutes + ':' + xSeconds + '.' + xMilliseconds;
+}
+
+
+function bodyOnloadEventHandler(event) { // F1: Aim form action at the cloud service 
+	//
+	
+	logWrite('L1092 Start');
+	
+	document.getElementById('h3topic25id').innerHTML = global.selfTitle;	
+	document.getElementById('key25id').value = global.cellInitialKey;	
+	document.getElementById('column25id').value = global.cellInitialData;	
+	
+	logWrite('L1098 Resets cloud service URL');
+	document.getElementById('form25id').action = global.cloudServiceSetUrl;	
+	
+	document.getElementById('lessonUrl25id').value = global.codingLessonUrl;
+	document.getElementById('lessonUrl25id').style.width = 0.4*screen.width;
+	
+	document.getElementById('iframe25id').style.width = 0.4*screen.width;
+	
+	document.getElementById('prompt25id').style.height = 200;
+	document.getElementById('prompt25id').style.width = 0.4*screen.width;
+	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
+	
+	logWrite('L1110 Finish'+global.HR+'PAGE LOADED'+global.HR);
+}
+
+
+function iframe25OnloadEventHandler(event) { // F2: Flag up iframe25Loaded
+	//
+	
+	logWrite(global.HR);
+	logWrite('L2118 Start');
+	global.iframe25Loaded = true;
+	logWrite('L2120 Finish; Set iframe25Loaded=' + global.iframe25Loaded + global.HR);
+}
+
+
+function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
+	//
+	
+	logWrite('L3127 Start');
+	
+	setTimeout( function() {
+		logWrite('L3130 Disable the Submit button');
+		document.getElementById("btnsubmit25id").disabled = true;
+		document.body.style.cursor = 'wait';
+		document.getElementById("btnclear25id").focus();
+	}, 22);
+	
+	setTimeout( function() {
+	
+		logWrite('L3138 Start; iframe25Loaded: ' + global.iframe25Loaded);
+		
+		resetOutputFields('Submitting data');
+		
+		var form = document.getElementById('form25id');
+		var iFrame = document.getElementById('iframe25id');
+		
+		global.iframe25Loaded = false;
+		logWrite('L3146 Flag down, iframe25Loaded: ' + global.iframe25Loaded);
+		
+		logWrite('L3148 Set up to detect cloud response');
+		iFrame.onload = iframe25OnloadEventHandler(event);
+		
+		logWrite('L3151 Send data to cloud service');
+		form.submit();
+		
+		logWrite('L3154 Watch for cloud response');
+		setTimeout( form25SetResponseDelayHandler, 1000*global.expectedCloudServiceDelaySeconds );
+		
+		logWrite('L3156 Finish; iframe25Loaded: ' + global.iframe25Loaded + global.HR);
+	
+	}, 222);
+	
+	logWrite('L3161 Finish');
+}
+
+
+function form25setResponseProcessed() { // F4: Confirm input values
+	//
+
+	if (!global.iframe25Loaded) {
+		logWrite('L4169 Still waiting for the cloud');	
+		return false; 
+	}
+	
+	logWrite('L4173 Start; iframe25Loaded: ' + global.iframe25Loaded);
+
+	var cellKind = document.getElementById('kind25id').value;
+	var cellKey = document.getElementById('key25id').value;
+	var cellProperty = document.getElementById('column25id').value;
+	var cellValue = document.getElementById('lessonUrl25id').value;
+
+	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + 
+		'\n\nurlOfLesson: '+cellValue + '\n\ncloudServiceSetUrl: '+global.cloudServiceSetUrl;
+	
+	logWrite('L4183 Report input data');
+	document.getElementById('prompt25id').innerHTML = msg;
+	
+	setTimeout( function() {
+		logWrite('L4187 Enable the Submit button');
+		document.getElementById("btnsubmit25id").disabled = false;
+		document.body.style.cursor = 'auto';
+	}, 111);
+	
+	logWrite('L4192 Finish'+global.HR+'ALL DONE'+global.HR);	
+	return true;
+}
+
+
+function resetOutputFields(actionVerb) { // F5: Prompt the user of the current status
+	//
+	
+	logWrite('L5200 Start; reset the user interface');
+	
+	global.iframe25Loaded = false;
+	
+	document.getElementById('prompt25id').innerHTML = actionVerb + ' at ' + simpleTimestamp(); 
+	
+	var iFrame = document.getElementById('iframe25id');
+	try {
+		iFrame.src = 'about:blank';
+	} catch (e) {
+		logWrite(e.message);
+	}
+	
+	logWrite('L5213 Finish');
+}
+
+
+function form25ClearEventHandler() { // F6 Reset the UI
+	//
+	
+	logWrite('F6220 Start');
+	
+	resetOutputFields('Ready');
+	
+	logWrite('F6224 Enable the Submit button');
+	document.getElementById("btnsubmit25id").disabled = false;
+	
+	logWrite('L6227 Finish'+global.HR+'ALL CLEAR'+global.HR);
+}
+
+
+function form25SetResponseDelayHandler() { // F7 Watch for and process cloud response
+	//
+	
+	logWrite('L7234 Start');
+	
+    setTimeout( function() {
+		logWrite('L7237 About to check response');
+		if (!form25setResponseProcessed())
+		{
+			logWrite('L7240 About to process response');
+			form25SetResponseDelayHandler();
+		}
+    }, 1000*global.expectedCloudServiceDelaySeconds);
+	
+	logWrite('L7245 Finish');
+}
+
+
+function form25RetrieveEventHandler(event) { // F13 Process the request from the Retrieve button 
+	//
+	
+	logWrite('L13252 Start');
+	
+	setTimeout( function() {
+		logWrite('L13255 Disable the Retrieve button');
+		document.getElementById("btnretrieve25id").disabled = true;
+		document.body.style.cursor = 'wait';
+		document.getElementById("btnclear25id").focus();
+	}, 22);
+	
+	setTimeout( function() {
+	
+		logWrite('L13263 Start');
+		
+		resetOutputFields('Submitting data');
+		
+		var form = document.getElementById('form25id');
+		var iFrame = document.getElementById('iframe25id');
+		
+		global.iframe25Loaded = false;
+		iFrame.onload = iframe25OnloadEventHandler(event);
+	
+		logWrite('L13273 Resets cloud service URL');
+		form.action = global.cloudServiceGetUrl;	
+		
+		logWrite('L13276 Send data to cloud service');
+		form.submit();
+		
+		logWrite('L13279 Watch for cloud response');
+		setTimeout( form25SetResponseDelayHandler, 1000*global.expectedCloudServiceDelaySeconds );
+		
+		logWrite('L3156 Finish; iframe25Loaded: ' + global.iframe25Loaded + global.HR);
+	
+	}, 222);
+	
+	logWrite('L13286 Finish');
+}
+
+
+function form25getResponseProcessed() { // F14: Confirm input values
+	//
+
+	if (!global.iframe25Loaded) {
+		logWrite('L14294 Still waiting for the cloud');	
+		return false; 
+	}
+	
+	logWrite('L14298 Start; iframe25Loaded: ' + global.iframe25Loaded);
+
+	var cellKind = document.getElementById('kind25id').value;
+	var cellKey = document.getElementById('key25id').value;
+	var cellProperty = document.getElementById('column25id').value;
+	var cellValue = document.getElementById('lessonUrl25id').value;
+
+	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + 
+		'\n\nurlOfLesson: '+cellValue + '\n\ncloudServiceSetUrl: '+global.cloudServiceSetUrl;
+	
+	logWrite('L14308 Report input data');
+	document.getElementById('prompt25id').innerHTML = msg;
+	
+	setTimeout( function() {
+		logWrite('L14312 Enable the Submit button');
+		document.getElementById("btnretrieve25id").disabled = false;
+		document.body.style.cursor = 'auto';
+	}, 111);
+	
+	logWrite('L14317 Finish'+global.HR+'ALL DONE'+global.HR);	
+	return true;
+}
+
+
+function form25GetResponseDelayHandler() { // F17 Watch for and process GET response
+	//
+	
+	logWrite('L17293 Start');
+	
+    setTimeout( function() {
+		logWrite('L17296 About to check response');
+		if (!form25getResponseProcessed())
+		{
+			logWrite('L7240 About to process response');
+			form25GetResponseDelayHandler();
+		}
+    }, 1000*global.expectedCloudServiceDelaySeconds);
+	
+	logWrite('L7245 Finish');
+}
+
+</script>
+
+</head>
+
+<body onload='bodyOnloadEventHandler()'>
+
+<h3 id='h3topic25id'>(undeclared title)</h3>
+
+<form id='form25id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
+	Kind: <input id='kind25id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
+	Key: <input id='key25id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
+	Mycolumn3: <input id='column25id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
+	urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
+</form>
+
+<p><button form='form25id' id='btnsubmit25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
+	<button id='btnclear25id' name='btnclear' onclick='form25ClearEventHandler()'>Clear</button>
+	<button id='btnretrieve25id' name='btnretrieve' onclick='form25RetrieveEventHandler()'>Retrieve</button><br>
+
+	<textarea id='prompt25id' height=200>Loading...</textarea><br>
+
+	<iframe id='iframe25id' name='iframe25name' height=100 >
+	</iframe>
+</p>
+
+<p>Press the Submit button and try again, if you see any of the following messages:
+	<ul>
+		<li>Endpoint read failed</li>
+		<li>Error: could not handle the request</li>
+		<li>Error: Server Error</li>
+	</ul>
+</p>
+
+</body>
+
+</html>
