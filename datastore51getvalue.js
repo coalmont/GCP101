@@ -1,7 +1,7 @@
 // File: index.js (where this source code should be placed)
 // Function: (as named by cloudService, below)
 // Lesson: (as declared by lessonURL, below)
-// Source: https://github.com/ri4c/GCP101/blob/master/datastore51setvalue.js
+// Source: https://github.com/ri4c/GCP101/blob/master/datastore51getvalue.js
 
 'use strict'; // Code syntax is to be in strict mode
 
