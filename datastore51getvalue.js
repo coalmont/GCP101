@@ -9,7 +9,7 @@ const dataStore = require('@google-cloud/datastore')();
 // The above line requires the following in package.json:
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
-const cloudService = "datastore51setvalue"; // As found on console.cloud.google.com/functions/list
+const cloudService = "datastore51getvalue"; // As found on console.cloud.google.com/functions/list
 const serviceVersion = "0.1";
 const versionDate = '2018-02-14 7:04 AM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
