@@ -10,8 +10,8 @@ const dataStore = require('@google-cloud/datastore')();
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
 const cloudService = "datastore23setvalue"; // As found on console.cloud.google.com/functions/list
-const serviceVersion = "1.0";
-const versionDate = '2018-02-14 5:57 AM';
+const serviceVersion = "1.1";
+const versionDate = '2018-02-14 7:00 AM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
 
 const lessonURL = 'https://seekonkjourney.wordpress.com/gcp101-chapter-23-datastore23setvalue-cloud-service/';
@@ -52,7 +52,7 @@ function getKey (requestData) { // Start of getKey
 } // End of getKey
 
 exports.setValue = (req, res) => { // Start of setValue
-  // Step A - Abort with an error if the parent JSON does not include valid name in the third field.
+  // Step A – Receive input from the web request object req.
   
   // Step B - Abort with an error if the parent JSON does not include valid name in the third field.
   if (!req.body.value) { throw new Error('L25 Data missing. Example:\n' + dataExample1); }
