@@ -1,8 +1,8 @@
 <html>
 
 <!--
-	This source code is for use in Chapter 51 of the online book "GCP 101 by Ri4C".
-	Chapter 51 URL: https://seekonkjourney.wordpress.com/gpg101-chapter-51-datastore51getvalue-cloud-service/
+	This source code is for use in Chapter 52 of the online book "GCP 101 by Ri4C".
+	Chapter 52 URL: https://thumosforlife.wordpress.com/gpg101-chapter-52-gcp101c52demo18b2-local-app/
 	Book homepage: https://ri4c.com/gcp101/
  -->
  
@@ -17,11 +17,11 @@
 'use strict';
 
 const selfSuffix = '18B2';
-const chapterNumber = '51';
+const chapterNumber = '52';
 
 var global = { // Global constants and variables
 
-	googleCloudProjectId : 'tb4gcp18a',
+	googleCloudProjectId : 'xtb4gcp18ax',
 	debug : true,
 	iframe25Loaded : false,
 	expectedCloudServiceDelaySeconds : 1,
@@ -91,21 +91,21 @@ function bodyOnloadEventHandler(event) { // F1: Aim form action at the cloud ser
 	
 	logWrite('L1092 Start');
 	
-	document.getElementById('h3topic25id').innerHTML = global.selfTitle;	
-	document.getElementById('key25id').value = global.cellInitialKey;	
-	document.getElementById('column25id').value = global.cellInitialData;	
+	document.getElementById('h3topic52id').innerHTML = global.selfTitle;	
+	document.getElementById('key52id').value = global.cellInitialKey;	
+	document.getElementById('column52id').value = global.cellInitialData;	
 	
 	logWrite('L1098 Resets cloud service URL');
-	document.getElementById('form25id').action = global.cloudServiceSetUrl;	
+	document.getElementById('form52id').action = global.cloudServiceSetUrl;	
 	
-	document.getElementById('lessonUrl25id').value = global.codingLessonUrl;
-	document.getElementById('lessonUrl25id').style.width = 0.4*screen.width;
+	document.getElementById('lessonUrl52id').value = global.codingLessonUrl;
+	document.getElementById('lessonUrl52id').style.width = 0.4*screen.width;
 	
-	document.getElementById('iframe25id').style.width = 0.4*screen.width;
+	document.getElementById('iframe52id').style.width = 0.4*screen.width;
 	
-	document.getElementById('prompt25id').style.height = 200;
-	document.getElementById('prompt25id').style.width = 0.4*screen.width;
-	document.getElementById('prompt25id').innerHTML = 'Ready at ' + simpleTimestamp(); 
+	document.getElementById('prompt52id').style.height = 200;
+	document.getElementById('prompt52id').style.width = 0.4*screen.width;
+	document.getElementById('prompt52id').innerHTML = 'Ready at ' + simpleTimestamp(); 
 	
 	logWrite('L1110 Finish'+global.HR+'PAGE LOADED'+global.HR);
 }
@@ -128,9 +128,9 @@ function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
 	
 	setTimeout( function() {
 		logWrite('L3130 Disable the Submit button');
-		document.getElementById("btnsubmit25id").disabled = true;
+		document.getElementById("btnsubmit52id").disabled = true;
 		document.body.style.cursor = 'wait';
-		document.getElementById("btnclear25id").focus();
+		document.getElementById("btnclear52id").focus();
 	}, 22);
 	
 	setTimeout( function() {
@@ -139,14 +139,14 @@ function form25SubmitEventHandler(event) { // F3: Flag down iframe25Loaded
 		
 		resetOutputFields('Submitting data');
 		
-		var form = document.getElementById('form25id');
-		var iFrame = document.getElementById('iframe25id');
+		var form = document.getElementById('form52id');
+		var iFrame = document.getElementById('iframe52id');
 		
 		global.iframe25Loaded = false;
 		iFrame.onload = iframe25OnloadEventHandler(event);
 	
 		logWrite('L1148 Resets cloud service URL');
-		document.getElementById('form25id').action = global.cloudServiceSetUrl;	
+		document.getElementById('form52id').action = global.cloudServiceSetUrl;	
 		
 		logWrite('L3151 Send data to cloud service');
 		form.submit();
@@ -172,20 +172,20 @@ function form25setResponseProcessed() { // F4: Confirm input values
 	
 	logWrite('L4173 Start; iframe25Loaded: ' + global.iframe25Loaded);
 
-	var cellKind = document.getElementById('kind25id').value;
-	var cellKey = document.getElementById('key25id').value;
-	var cellProperty = document.getElementById('column25id').value;
-	var cellValue = document.getElementById('lessonUrl25id').value;
+	var cellKind = document.getElementById('kind52id').value;
+	var cellKey = document.getElementById('key52id').value;
+	var cellProperty = document.getElementById('column52id').value;
+	var cellValue = document.getElementById('lessonUrl52id').value;
 
 	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + 
 		'\n\nurlOfLesson: '+cellValue + '\n\ncloudServiceSetUrl: '+global.cloudServiceSetUrl;
 	
 	logWrite('L4183 Report input data');
-	document.getElementById('prompt25id').innerHTML = msg;
+	document.getElementById('prompt52id').innerHTML = msg;
 	
 	setTimeout( function() {
 		logWrite('L4187 Enable the Submit button');
-		document.getElementById("btnsubmit25id").disabled = false;
+		document.getElementById("btnsubmit52id").disabled = false;
 		document.body.style.cursor = 'auto';
 	}, 111);
 	
@@ -201,9 +201,9 @@ function resetOutputFields(actionVerb) { // F5: Prompt the user of the current s
 	
 	global.iframe25Loaded = false;
 	
-	document.getElementById('prompt25id').innerHTML = actionVerb + ' at ' + simpleTimestamp(); 
+	document.getElementById('prompt52id').innerHTML = actionVerb + ' at ' + simpleTimestamp(); 
 	
-	var iFrame = document.getElementById('iframe25id');
+	var iFrame = document.getElementById('iframe52id');
 	try {
 		iFrame.src = 'about:blank';
 	} catch (e) {
@@ -221,8 +221,8 @@ function form25ClearEventHandler() { // F6 Reset the UI
 	resetOutputFields('Ready');
 	
 	logWrite('F6224 Enable the Submit button');
-	document.getElementById("btnsubmit25id").disabled = false;
-	document.getElementById("btnretrieve25id").disabled = false;
+	document.getElementById("btnsubmit52id").disabled = false;
+	document.getElementById("btnretrieve52id").disabled = false;
 	
 	
 	logWrite('L6227 Finish'+global.HR+'ALL CLEAR'+global.HR);
@@ -253,9 +253,9 @@ function form25RetrieveEventHandler(event) { // F13 Process the request from the
 	
 	setTimeout( function() {
 		logWrite('L13255 Disable the Retrieve button');
-		document.getElementById("btnretrieve25id").disabled = true;
+		document.getElementById("btnretrieve52id").disabled = true;
 		document.body.style.cursor = 'wait';
-		document.getElementById("btnclear25id").focus();
+		document.getElementById("btnclear52id").focus();
 	}, 22);
 	
 	setTimeout( function() {
@@ -264,8 +264,8 @@ function form25RetrieveEventHandler(event) { // F13 Process the request from the
 		
 		resetOutputFields('Submitting data');
 		
-		var form = document.getElementById('form25id');
-		var iFrame = document.getElementById('iframe25id');
+		var form = document.getElementById('form52id');
+		var iFrame = document.getElementById('iframe52id');
 		
 		global.iframe25Loaded = false;
 		iFrame.onload = iframe25OnloadEventHandler(event);
@@ -297,20 +297,20 @@ function form25getResponseProcessed() { // F14: Confirm input values
 	
 	logWrite('L14298 Start; iframe25Loaded: ' + global.iframe25Loaded);
 
-	var cellKind = document.getElementById('kind25id').value;
-	var cellKey = document.getElementById('key25id').value;
-	var cellProperty = document.getElementById('column25id').value;
-	var cellValue = document.getElementById('lessonUrl25id').value;
+	var cellKind = document.getElementById('kind52id').value;
+	var cellKey = document.getElementById('key52id').value;
+	var cellProperty = document.getElementById('column52id').value;
+	var cellValue = document.getElementById('lessonUrl52id').value;
 
 	var msg = 'Kind: '+cellKind + '\nKey: '+cellKey + '\nMycolumn3: '+cellProperty + 
 		'\n\nurlOfLesson: '+cellValue + '\n\ncloudServiceSetUrl: '+global.cloudServiceSetUrl;
 	
 	logWrite('L14308 Report input data');
-	document.getElementById('prompt25id').innerHTML = msg;
+	document.getElementById('prompt52id').innerHTML = msg;
 	
 	setTimeout( function() {
 		logWrite('L14312 Enable the Retrieve button');
-		document.getElementById("btnretrieve25id").disabled = false;
+		document.getElementById("btnretrieve52id").disabled = false;
 		document.body.style.cursor = 'auto';
 	}, 333);
 	
@@ -342,22 +342,22 @@ function form25GetResponseDelayHandler() { // F17 Watch for and process GET resp
 
 <body onload='bodyOnloadEventHandler()'>
 
-<h3 id='h3topic25id'>(undeclared title)</h3>
+<h3 id='h3topic52id'>(undeclared title)</h3>
 
-<form id='form25id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
-	Kind: <input id='kind25id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
-	Key: <input id='key25id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
-	Mycolumn3: <input id='column25id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
-	urlOfLesson: <br><input id='lessonUrl25id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
+<form id='form52id' target='iframe25name' method='POST' enctype='application/json' action='URL missing'>
+	Kind: <input id='kind52id' name='kind' type='text' value='mytable1' title='Kind of data (table)' /><br>
+	Key: <input id='key52id' name='key' type='text' value='myrow18A1' title='Name of data key (row)' /><br>
+	Mycolumn3: <input id='column52id' name='value[mycolumn3]' type='text' value='my21data4' title='Name of data property (column)' /><br>
+	urlOfLesson: <br><input id='lessonUrl52id' name='value[urlOfLesson]' type='text' value='URL optional' title='Value of data (cell)' />
 </form>
 
-<p><button form='form25id' id='btnsubmit25id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
-	<button id='btnclear25id' name='btnclear' onclick='form25ClearEventHandler()'>Clear</button>
-	<button id='btnretrieve25id' name='btnretrieve' onclick='form25RetrieveEventHandler()'>Retrieve</button><br>
+<p><button form='form52id' id='btnsubmit52id' name='btnsubmit' onclick='form25SubmitEventHandler()'>Submit</button>
+	<button id='btnclear52id' name='btnclear' onclick='form25ClearEventHandler()'>Clear</button>
+	<button id='btnretrieve52id' name='btnretrieve' onclick='form25RetrieveEventHandler()'>Retrieve</button><br>
 
-	<textarea id='prompt25id' height=200>Loading...</textarea><br>
+	<textarea id='prompt52id' height=200>Loading...</textarea><br>
 
-	<iframe id='iframe25id' name='iframe25name' height=100 >
+	<iframe id='iframe52id' name='iframe25name' height=100 >
 	</iframe>
 </p>
 
