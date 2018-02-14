@@ -10,8 +10,8 @@ const dataStore = require('@google-cloud/datastore')();
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
 const cloudService = "datastore51getvalue"; // As found on console.cloud.google.com/functions/list
-const serviceVersion = "0.1";
-const versionDate = '2018-02-14 7:04 AM';
+const serviceVersion = "0.2";
+const versionDate = '2018-02-14 4:57 PM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
 
 const lessonURL = 'https://seekonkjourney.wordpress.com/gpg101-chapter-51-datastore51getvalue-cloud-service/';
