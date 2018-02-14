@@ -15,7 +15,7 @@ const versionDate = '2018-02-14 7:04 AM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
 
 const lessonURL = 'https://seekonkjourney.wordpress.com/gpg101-chapter-51-datastore51getvalue-cloud-service/';
-var dataExample1 = `{ "kind":"mytable1", "key":"myrow51", "value":{"mycolumn3":"mydata51", "urlOfLesson": "${lessonURL}"}}`;
+var dataExample1 = `{ "kind":"mytable1", "key":"myrow51"}`;
 
 function padLeadZeros(number, zeroCount) { // No tracing of a low-level utility
 	// Unit Test: https://codepen.io/ri4c/pen/XZMPdK
@@ -46,8 +46,8 @@ function simpleTimestamp() { // No tracing of a low-level utility
 }
 
 function getKey (requestData) { // Start of getKey
-  if (!requestData.key) { throw new Error('L19 Key missing'); }
-  if (!requestData.kind) { throw new Error('L20 Kind missing'); }
+  if (!requestData.key) { throw new Error('L19 Key missing. Example:\n' + dataExample1); }
+  if (!requestData.kind) { throw new Error('L20 Kind missing. Example:\n' + dataExample1); }
   return dataStore.key([requestData.kind, requestData.key]);
 } // End of getKey
 
@@ -57,7 +57,7 @@ exports.getValue = (req, res) => { // Start of getValue
   // Step B - Determine where the target data is in Datastore.
   const key = getKey(req.body);
 
-  return datastore.get(key)
+  return dataStore.get(key)
     .then( ([entity]) => {
       if (!entity) {
         throw new Error(`No entity found for key ${key.path.join('/')}.`);
