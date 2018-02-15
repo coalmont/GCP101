@@ -1,8 +1,8 @@
 <html>
 <!--
 	This source code is for use in Chapter 56 of the online book "GCP 101 by Ri4C".
-	Chapter 56 URL: xxx
-	Source: xxx
+	Chapter 56 URL: https://thumosforlife.wordpress.com/gcp101-chapter-56-gcp101c56demo18d4-local-app/
+	Source: https://github.com/ri4c/GCP101/blob/master/gcp101c56demo18D4.htm
 	Book homepage: https://ri4c.com/gcp101/
  -->
  
@@ -466,10 +466,44 @@ function form25ClearEventHandler() { // L447 F6 Reset the UI
 
 function loadComboEntityList() { // L467 F31 
 	logWrite('F31468 Start');
-	logWrite('L31599 Finish');
+    setTimeout( loadComboEntityListAsync, 11);
+	logWrite('L31470 Finish');
 }
 
 
+
+
+function loadComboEntityListAsync() { // L476 F32 
+	logWrite('F32477 Start');
+    setTimeout( function() {
+		logWrite('L32479 Loading entity names');
+		
+		// Logic to load entity names...
+		// https://stackoverflow.com/questions/11116760/save-json-in-javascript-variable
+		var xhReq = new XMLHttpRequest(); // Info at https://xhr.spec.whatwg.org
+		
+		// bad: xhReq.request.set('Access-Control-Allow-Origin', "*");
+		// XMLHttpRequest + Access-Control-Allow-Origin
+		
+		xhReq.onreadystatechange = function () {
+			//if(xhReq.readyState === XMLHttpRequest.DONE && xhReq.status === 200) {
+			
+				logWrite(`L32000 xhReq.readyState: ${xhReq.readyState}`);
+				logWrite(`L32000 xhReq.status: ${xhReq.status}`);
+				logWrite(`L32000 xhReq.responseText: ${xhReq.responseText}`);
+				
+			//}
+		};
+			
+		logWrite(`L32000 xhReq.open...`);
+		xhReq.open("GET", global.cloudServiceGetNamesUrl, true);
+			
+		logWrite(`L32000 xhReq.send...`);
+		xhReq.send();
+		
+    }, 11);
+	logWrite('L32599 Finish');
+}
 
 
 
