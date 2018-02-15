@@ -48,6 +48,7 @@ function simpleTimestamp() { // No tracing of a low-level utility
 exports.getNames = (req, res) => { // Start of getValue
   // Step A – Receive input from the web request object req.
   
+  /*
   var requestData = req.body;
   if (!requestData) { throw new Error('L51 Data missing. Example:\n' + dataExample1); }
   if (!requestData.kind) { throw new Error('L52 Kind missing. Example:\n' + dataExample1); }
@@ -58,7 +59,9 @@ exports.getNames = (req, res) => { // Start of getValue
   // const query = dataStore.createQuery(requestData.kind).select('id').order('id', {descending: false} );
   console.log(`L59 Kind:${requestData.kind}`);
   const query = dataStore.createQuery(requestData.kind);
+  */
   
+  const query = dataStore.createQuery('mytable1');
   return dataStore.runQuery(query).then( results => {
     
     // console.log(`L63 results:${JSON.stringify(results)}`);
@@ -81,6 +84,10 @@ exports.getNames = (req, res) => { // Start of getValue
       names: namespaces 
     }
     console.log(`L79 jsonResult:${JSON.stringify(jsonResult)}`);
+    
+    res.header('Access-Control-Allow-Headers', 'Origin, Content Type');
+  	res.header('Access-Control-Allow-Origin', "*");
+  	res.header('Access-Control-Allow-Methods', 'GET, POST');
     
     res.status(200).send(jsonResult);
 
