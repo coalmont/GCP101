@@ -10,8 +10,8 @@ const dataStore = require('@google-cloud/datastore')();
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
 const cloudService = "datastore53getnames"; // As found on console.cloud.google.com/functions/list
-const serviceVersion = "0.1";
-const versionDate = '2018-02-14 5:30 PM';
+const serviceVersion = "0.2";
+const versionDate = '2018-02-14 8:24 PM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
 
 const lessonURL = null; // *** TO BE DECLARED ***
@@ -56,22 +56,66 @@ exports.getNames = (req, res) => { // Start of getValue
   //const key = getKey(req.body);
   
   // const query = dataStore.createQuery(requestData.kind).select('id').order('id', {descending: false} );
-  console.log(`Kind:${requestData.kind}`);
+  console.log(`L59 Kind:${requestData.kind}`);
   const query = dataStore.createQuery(requestData.kind);
   
-  return dataStore.runQuery(query)
+  return dataStore.runQuery(query).then( results => {
+    
+    console.log(`L63 results:${JSON.stringify(results)}`);
+
+    const entities = results[0];
+    console.log(`L66 entities:${JSON.stringify(entities)}`);
+
+    const namespaces = entities.map(entity => entity[dataStore.KEY].name);
+    console.log(`L69 namespaces:${JSON.stringify(namespaces)}`);
+
+    console.log(`L71 Namespaces:`);
+
+    namespaces.forEach(namespace => {
+      console.log(`L74 Namespace: ${namespace}`)
+    });
+    
+    res.status(200).send(namespaces);
+
+    return namespaces;
+    
+  }); // End of dataStore.runQuery
+  
+/*  
+  
     .then( (results) => {
-      const names = results[0];
-	  console.log(`results:${results}`);
-      if (!names) {
-        throw new Error(`No ${requestData.kind} entities found.`);
-      }
-      res.status(200).send(names);
+    
+      const entities = results[0];
+	  console.log(`L66 Entities:${JSON.stringify(entities)}`);
+      console.log('L67 Entities:');
+    
+      entities.forEach( entity => {
+        
+        console.log(`L71 Entity: ${JSON.stringify(entity)}`);
+        
+        // try {
+          var id = entity.getId();
+          console.log(`L75 Key: ${id}`);
+          var name = entity.getName();
+          console.log(`L77 Key: ${name}`);
+        // } catch { }
+        
+      } ); // End of entities.forEach
+    
+      // if (!entities) { throw new Error(`No ${requestData.kind} entities found.`); }
+    
+      // var keys = results.map( function(entity) { return entity[dataStore.KEY]; });
+	  // console.log(`keys:${JSON.stringify(keys)}`);
+    
+      res.status(200).send(entities); // Valid and good but use instead...
+      // res.status(200).send(keys);
+    
     })
     .catch((err) => {
       console.error(err);
       res.status(500).send(err.message);
       return Promise.reject(err);
     });
+*/
   
 }; // End of getNames
