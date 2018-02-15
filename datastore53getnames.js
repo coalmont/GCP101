@@ -1,7 +1,7 @@
 // File: index.js (where this source code should be placed)
 // Function: (as named by cloudService, below)
 // Lesson: (as declared by lessonURL, below)
-// Source: (URL for Chapter 53)  // *** TO BE DECLARED ***
+// Source: https://github.com/ri4c/GCP101/blob/master/datastore53getnames.js
 
 'use strict'; // Code syntax is to be in strict mode
 
@@ -10,11 +10,11 @@ const dataStore = require('@google-cloud/datastore')();
 // {"dependencies": { "@google-cloud/datastore": "1.3.3" } }
 
 const cloudService = "datastore53getnames"; // As found on console.cloud.google.com/functions/list
-const serviceVersion = "0.2";
-const versionDate = '2018-02-14 8:24 PM';
+const serviceVersion = "0.3";
+const versionDate = '2018-02-14 8:49 PM';
 const versionInfo = cloudService+' '+serviceVersion+' '+versionDate;
 
-const lessonURL = null; // *** TO BE DECLARED ***
+const lessonURL = `https://seekonkjourney.wordpress.com/gcp101-chapter-53-datastore53getnames-cloud-service/`; // *** TO BE DECLARED ***
 var dataExample1 = `{ "kind":"mytable1"}`;
 
 function padLeadZeros(number, zeroCount) { // No tracing of a low-level utility
@@ -61,61 +61,31 @@ exports.getNames = (req, res) => { // Start of getValue
   
   return dataStore.runQuery(query).then( results => {
     
-    console.log(`L63 results:${JSON.stringify(results)}`);
+    // console.log(`L63 results:${JSON.stringify(results)}`);
 
     const entities = results[0];
-    console.log(`L66 entities:${JSON.stringify(entities)}`);
+    // console.log(`L66 entities:${JSON.stringify(entities)}`);
 
     const namespaces = entities.map(entity => entity[dataStore.KEY].name);
-    console.log(`L69 namespaces:${JSON.stringify(namespaces)}`);
+    // console.log(`L69 namespaces:${JSON.stringify(namespaces)}`);
 
-    console.log(`L71 Namespaces:`);
+    // console.log(`L71 Namespaces:`);
 
     namespaces.forEach(namespace => {
-      console.log(`L74 Namespace: ${namespace}`)
+      // console.log(`L74 Namespace: ${namespace}`)
     });
     
-    res.status(200).send(namespaces);
+    var jsonResult = {
+      time: simpleTimestamp(),
+      kind: requestData.kind,
+      names: namespaces 
+    }
+    console.log(`L79 jsonResult:${JSON.stringify(jsonResult)}`);
+    
+    res.status(200).send(jsonResult);
 
-    return namespaces;
+    // return namespaces;
     
   }); // End of dataStore.runQuery
-  
-/*  
-  
-    .then( (results) => {
-    
-      const entities = results[0];
-	  console.log(`L66 Entities:${JSON.stringify(entities)}`);
-      console.log('L67 Entities:');
-    
-      entities.forEach( entity => {
-        
-        console.log(`L71 Entity: ${JSON.stringify(entity)}`);
-        
-        // try {
-          var id = entity.getId();
-          console.log(`L75 Key: ${id}`);
-          var name = entity.getName();
-          console.log(`L77 Key: ${name}`);
-        // } catch { }
-        
-      } ); // End of entities.forEach
-    
-      // if (!entities) { throw new Error(`No ${requestData.kind} entities found.`); }
-    
-      // var keys = results.map( function(entity) { return entity[dataStore.KEY]; });
-	  // console.log(`keys:${JSON.stringify(keys)}`);
-    
-      res.status(200).send(entities); // Valid and good but use instead...
-      // res.status(200).send(keys);
-    
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send(err.message);
-      return Promise.reject(err);
-    });
-*/
   
 }; // End of getNames
