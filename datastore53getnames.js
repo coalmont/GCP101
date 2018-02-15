@@ -85,10 +85,6 @@ exports.getNames = (req, res) => { // Start of getValue
     }
     console.log(`L79 jsonResult:${JSON.stringify(jsonResult)}`);
     
-    res.header('Access-Control-Allow-Headers', 'Origin, Content Type');
-  	res.header('Access-Control-Allow-Origin', "*");
-  	res.header('Access-Control-Allow-Methods', 'GET, POST');
-    
     res.status(200).send(jsonResult);
 
     // return namespaces;
